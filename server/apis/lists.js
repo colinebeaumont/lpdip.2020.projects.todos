@@ -15,7 +15,7 @@ const connection = mysql.createConnection({
 listsApi.get('/', function (req, res) {
   connection.query(
     'SELECT * FROM Liste',
-    function(err, results, fields) {
+    function(err, results) {
       res.json(results)
     }
   );
@@ -24,16 +24,18 @@ listsApi.post('/', function (req, res) {
   connection.query(
     'INSERT INTO Liste (label, description) VALUES (?, ?)',
     [req.body.label, req.body.description],
-    function(err, results, fields) {
-      res.json(results)
+    function(err, results) {
+      if (err) throw err;
+      res.json(req.body)
     });
 })
 listsApi.put('/', function (req, res) {
   connection.query(
-    'UPDATE todo SET label=? WHERE id=?',
-    [req.body.label, req.body.description],
-    function(err, results, fields) {
-      res.json(results)
+    'UPDATE Liste SET label=?, description=? WHERE id=?',
+    [req.body.label, req.body.description, req.params.id],
+    function(err, results) {
+      if (err) throw err;
+      res.json(req.body)
     });
 })
 module.exports = listsApi;
